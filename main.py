@@ -2,8 +2,8 @@ from splinter import Browser
 browser = Browser('firefox')
 
 browser.visit('https://www.studweb.no/as/WebObjects/studentweb2?inst=FSWACT')
-browser.fill('fodselsnr', 'XXXXXXXXXXX')
-browser.fill('pinkode', 'XXXX')
+browser.fill('fodselsnr', 'xxxxxxxxxxx')
+browser.fill('pinkode', 'xxxx')
 browser.find_by_name('login').first.click()
 
 browser.click_link_by_href('/as/WebObjects/studentweb2.woa/wo/0.0.23.24.6.4.1.1')

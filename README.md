@@ -4,6 +4,8 @@
 ##### Studcli was created because I was tired of manually navigating to Studweb to see if I had gotten my grades yet.
 Hench why studcli was born, now you can easily call a python-command, and all your grades will be printed out and formatted in a nice way!
 
+<img src="screenshot.png">
+
 ## How to use
 1. Make sure you have Python installed
 2. Install splinter via pip
