@@ -1,9 +1,11 @@
-from ConfigParser import SafeConfigParser
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import ConfigParser, os
 from splinter import Browser
 
-
-parser = SafeConfigParser()
-parser.read('config.ini')
+parser = ConfigParser.ConfigParser()
+parser.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
 
 browser = Browser('phantomjs')
 browser.cookies.delete()
@@ -50,9 +52,9 @@ for char in grades:
 
 finalChar = total/len(grades)
 
-print ('----------------------------------')
-print ('Din naavaerende karakter er: ' + str(finalChar))
-print ('----------------------------------')
+print ('------------------------------------------')
+print ('Ditt nåværende karaktersnitt er: ' + str(finalChar))
+print ('------------------------------------------')
 
 browser.cookies.delete()
 browser.quit()
