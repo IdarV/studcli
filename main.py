@@ -5,22 +5,21 @@ from splinter import Browser
 parser = SafeConfigParser()
 parser.read('config.ini')
 
-browser = Browser(parser.get('Config', 'Browser'))
-browser.driver.maximize_window()
+browser = Browser('phantomjs')
+browser.cookies.delete()
+browser.driver.set_window_size(1920,1080)
 
-browser.visit('https://fsweb.no/studentweb/login.jsf?inst=' +  parser.get('Config', 'Institution'))
-browser.find_by_text('Norwegian ID number and PIN').first.click()
+browser.visit('http://fsweb.no/studentweb/login.jsf?inst=FSWACT') 
+browser.find_by_xpath("//div[@id='login-box']/div[@id='login-flaps']/div[@class='login-flap login-name-pin']").click()
 
-browser.find_by_id('login-box')
 browser.fill('j_idt129:j_idt131:fodselsnummer', parser.get('Config', 'Fodselsnummer'))
 browser.fill('j_idt129:j_idt131:pincode',  parser.get('Config', 'Pin'))
-browser.find_by_text('Log in').first.click()
 
-browser.click_link_by_href('/studentweb/resultater.jsf')
+browser.find_by_xpath("//button[@id='j_idt129:j_idt131:login']").click()
+browser.find_by_xpath("//nav[@id='menuBarLeft']/ul[@class='mainmenu']/li/a[@title='Resultater']").click()
 
+grades = []
 tags = browser.find_by_tag('tr')
-
-chars = []
 
 for tag in tags:
 	if tag.has_class('resultatTop') or tag.has_class('none'):
@@ -29,11 +28,11 @@ for tag in tags:
 		course_name = inner_tags[1].text.split("\n")[1]
 		grade = inner_tags[5].text
 		if grade != 'Passed':
-			chars.append(grade) 
+			grades.append(grade) 
 			print "%s\t%-30s\t%s" % (course_id, course_name, grade)
 
 total = 0.0
-for char in chars:
+for char in grades:
 	if char == 'A':
 		total += 6
 	elif char == 'B':
@@ -49,7 +48,7 @@ for char in chars:
 
 
 
-finalChar = total/len(chars)
+finalChar = total/len(grades)
 
 print ('----------------------------------')
 print ('Din naavaerende karakter er: ' + str(finalChar))
