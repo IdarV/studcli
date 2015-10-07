@@ -1,9 +1,11 @@
-from ConfigParser import SafeConfigParser
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import ConfigParser, os
 from splinter import Browser
 
-
-parser = SafeConfigParser()
-parser.read('config.ini')
+parser = ConfigParser.ConfigParser()
+parser.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
 
 browser = Browser(parser.get('Config', 'Browser'))
 browser.driver.maximize_window()
@@ -30,7 +32,8 @@ for tag in tags:
 		grade = inner_tags[5].text
 		if grade != 'Passed':
 			chars.append(grade) 
-			print "%s\t%-30s\t%s" % (course_id, course_name, grade)
+		
+		print "%s\t%-30s\t%s" % (course_id, course_name, grade)
 
 total = 0.0
 for char in chars:
@@ -51,9 +54,9 @@ for char in chars:
 
 finalChar = total/len(chars)
 
-print ('----------------------------------')
-print ('Din naavaerende karakter er: ' + str(finalChar))
-print ('----------------------------------')
+print ('------------------------------------------')
+print ('Ditt nåværende karaktersnitt er: ' + str(finalChar))
+print ('------------------------------------------')
 
 browser.cookies.delete()
 browser.quit()
