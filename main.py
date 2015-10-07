@@ -1,6 +1,8 @@
-import ConfigParser
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import ConfigParser, os
 from splinter import Browser
-import os
 
 parser = ConfigParser.ConfigParser()
 parser.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
@@ -52,9 +54,9 @@ for char in chars:
 
 finalChar = total/len(chars)
 
-print ('----------------------------------')
-print ('Din naavaerende karakter er: ' + str(finalChar))
-print ('----------------------------------')
+print ('------------------------------------------')
+print ('Ditt nåværende karaktersnitt er: ' + str(finalChar))
+print ('------------------------------------------')
 
 browser.cookies.delete()
 browser.quit()
