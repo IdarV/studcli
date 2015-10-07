@@ -1,9 +1,9 @@
-from ConfigParser import SafeConfigParser
+import ConfigParser
 from splinter import Browser
+import os
 
-
-parser = SafeConfigParser()
-parser.read('config.ini')
+parser = ConfigParser.ConfigParser()
+parser.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
 
 browser = Browser(parser.get('Config', 'Browser'))
 browser.driver.maximize_window()
@@ -30,7 +30,8 @@ for tag in tags:
 		grade = inner_tags[5].text
 		if grade != 'Passed':
 			chars.append(grade) 
-			print "%s\t%-30s\t%s" % (course_id, course_name, grade)
+		
+		print "%s\t%-30s\t%s" % (course_id, course_name, grade)
 
 total = 0.0
 for char in chars:
