@@ -6,6 +6,7 @@ parser = SafeConfigParser()
 parser.read('config.ini')
 
 browser = Browser(parser.get('Config', 'Browser'))
+browser.driver.maximize_window()
 
 browser.visit('https://fsweb.no/studentweb/login.jsf?inst=' +  parser.get('Config', 'Institution'))
 browser.find_by_text('Norwegian ID number and PIN').first.click()
