@@ -28,7 +28,7 @@ for tag in tags:
 		course_id = inner_tags[1].text.split("\n")[0]
 		course_name = inner_tags[1].text.split("\n")[1]
 		grade = inner_tags[5].text
-		if grade != 'passed':
+		if grade != 'Passed':
 			chars.append(grade) 
 			print "%s\t%-30s\t%s" % (course_id, course_name, grade)
 
