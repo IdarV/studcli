@@ -1,51 +1,58 @@
+from ConfigParser import SafeConfigParser
 from splinter import Browser
-browser = Browser('firefox')
 
-browser.visit('https://www.studweb.no/as/WebObjects/studentweb2?inst=FSWACT')
-browser.fill('fodselsnr', 'xxxxxxxxxxx')
-browser.fill('pinkode', 'xxxx')
-browser.find_by_name('login').first.click()
 
-browser.click_link_by_href('/as/WebObjects/studentweb2.woa/wo/0.0.23.24.6.4.1.1')
-browser.click_link_by_href('/as/WebObjects/studentweb2.woa/wo/2.0.23.24.6.6.1.1')
+parser = SafeConfigParser()
+parser.read('config.ini')
+
+browser = Browser(parser.get('Config', 'Browser'))
+
+browser.visit('https://fsweb.no/studentweb/login.jsf?inst=' +  parser.get('Config', 'Institution'))
+browser.find_by_text('Norwegian ID number and PIN').first.click()
+
+browser.find_by_id('login-box')
+browser.fill('j_idt129:j_idt131:fodselsnummer', parser.get('Config', 'Fodselsnummer'))
+browser.fill('j_idt129:j_idt131:pincode',  parser.get('Config', 'Pin'))
+browser.find_by_text('Log in').first.click()
+
+browser.click_link_by_href('/studentweb/resultater.jsf')
 
 tags = browser.find_by_tag('tr')
 
 chars = []
 
 for tag in tags:
-	if tag.outer_html.startswith('<tr class='):
-		cells = tag.find_by_tag('td')
-		
-		if cells[2].text != "":
-			print cells[1].text + '\t' + cells[2].text
-
-		print '\t' + cells[7].text + '\t' + cells[4].text,
-		if cells[3].text != "":
-			print "(" + cells[3].text + ")",
-		else:
-			print "",
-
-		if cells[8].text != "":
-			print "*"
-			if cells[7].text != 'Passed':
-				chars.append(cells[7].text)
-		else:
-			print ""
+	if tag.has_class('resultatTop') or tag.has_class('none'):
+		inner_tags = tag.find_by_tag('td')
+		course_id = inner_tags[1].text.split("\n")[0]
+		course_name = inner_tags[1].text.split("\n")[1]
+		grade = inner_tags[5].text
+		if grade != 'passed':
+			chars.append(grade) 
+			print "%s\t%-30s\t%s" % (course_id, course_name, grade)
 
 total = 0.0
 for char in chars:
 	if char == 'A':
 		total += 6
-	if char == 'B':
+	elif char == 'B':
 		total += 5
-	if char == 'C':
+	elif char == 'C':
 		total += 4
+	elif char == 'D':
+		total += 3
+	elif char == 'E':
+		total += 2
+	elif char == 'F':
+		total += 1
+
+
 
 finalChar = total/len(chars)
 
-print '----------------------------------'
-print 'Din naavaerende karakter er: ' + str(finalChar)
-print '----------------------------------'
+print ('----------------------------------')
+print ('Din naavaerende karakter er: ' + str(finalChar))
+print ('----------------------------------')
 
+browser.cookies.delete()
 browser.quit()
